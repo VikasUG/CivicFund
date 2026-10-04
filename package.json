@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "dev": "npm --prefix ./client run dev",
+    "start": "npm --prefix ./client run dev",
+    "build:client": "npm --prefix ./client run build",
+    "start:full": "powershell -ExecutionPolicy Bypass -File .\\start-hardhat-with-update.ps1",
+    "start:full:build": "npm run build:client && npm run start:full",
+    "full": "npm run build:client && npm run start:full",
+    "deploy": "cd web3 && npx hardhat run scripts/deploy-and-update.js --network localhost",
+    "check": "cd web3 && npx hardhat run scripts/check-deployment.js --network localhost"
+  }
+}

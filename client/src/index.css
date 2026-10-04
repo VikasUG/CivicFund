@@ -1,0 +1,216 @@
+@import url("https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #f5f6f8;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-hover: #f1f3f5;
+  --bg-subtle: #f5f6f8;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --text-tertiary: #94a3b8;
+  --text-placeholder: #94a3b8;
+  --border-color: #e2e8f0;
+  --accent: #2563eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.5);
+}
+
+/* Circular Inspection HUD (reference middle image) */
+.inspection-hud-wrapper {
+  position: relative;
+  width: min(500px, 92vw);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Courier New', Courier, monospace;
+  user-select: none;
+}
+
+.code-watermark {
+  position: absolute;
+  font-size: clamp(8px, 1.6vw, 11px);
+  color: rgba(60, 55, 45, 0.25);
+  font-family: 'Courier New', monospace;
+  line-height: 1.4;
+  pointer-events: none;
+  z-index: 1;
+  white-space: nowrap;
+}
+.code-watermark.top-right {
+  top: 4%;
+  right: 0;
+}
+.code-watermark.bottom-left {
+  bottom: 4%;
+  left: 2%;
+}
+
+.hud-circle {
+  position: relative;
+  width: 88%;
+  height: 88%;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 3px #1a1a1a,
+    0 0 0 8px #f4f1ea,
+    0 0 0 10px #2a2a2a,
+    0 20px 40px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+
+.asphalt-road {
+  position: absolute;
+  inset: 0;
+  background-color: #383738;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.4) 100%),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.1) 2px, rgba(0, 0, 0, 0.1) 4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crosswalk {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 22%;
+  background: repeating-linear-gradient(
+    180deg,
+    #e8e6df 0px,
+    #e8e6df 32px,
+    transparent 32px,
+    transparent 54px
+  );
+  opacity: 0.9;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.patched-pothole {
+  width: 30%;
+  height: 30%;
+  background-color: #262526;
+  border-radius: 4px;
+  box-shadow:
+    inset 0 0 15px rgba(0, 0, 0, 0.8),
+    0 0 2px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.yolo-bounding-box {
+  position: absolute;
+  width: 44%;
+  height: 34%;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(0, 0, 0, 0.7);
+}
+
+.yolo-bounding-box::before,
+.yolo-bounding-box::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+}
+.yolo-bounding-box::before {
+  border-top: 3px solid #111;
+  border-bottom: 3px solid #111;
+}
+.yolo-bounding-box::after {
+  border-left: 3px solid #111;
+  border-right: 3px solid #111;
+}
+
+.center-target {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9%;
+  height: 12%;
+  transform: translate(-50%, -50%);
+}
+.crosshair-ch {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.crosshair-ch::before,
+.crosshair-ch::after {
+  content: '';
+  position: absolute;
+  background: #111;
+}
+.crosshair-ch::before {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+.crosshair-ch::after {
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.hud-badge {
+  position: absolute;
+  background: rgba(10, 30, 20, 0.85);
+  border: 1px solid #00ff88;
+  color: #00ff88;
+  font-size: clamp(8px, 1.6vw, 11px);
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  box-shadow:
+    0 0 10px rgba(0, 255, 136, 0.3),
+    inset 0 0 6px rgba(0, 255, 136, 0.2);
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  backdrop-filter: blur(2px);
+}
+
+.status-badge {
+  top: -34%;
+  left: 0;
+}
+
+.conf-badge {
+  bottom: -34%;
+  right: 0;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #00ff88;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #00ff88;
+}
