@@ -690,10 +690,16 @@ const CivicImageAnalysis = ({ imageUrl, referenceImageUrl, projectType = 'infras
     const smoothness = roadDamage.smoothness;
     const edgeDensity = imageFeatures?.edgeDensity || 0;
     const darkRatio = imageFeatures?.darkRatio || 0;
+    const highContrastDensity = imageFeatures?.highContrastDensity || 0;
     // A clear, definite pothole = a dark hole/crater on road-like gray pavement.
-    // The < 0.5 guard avoids treating a fully-dark (night) photo as a pothole.
+    // Require visible edges and contrast so shadows or dark asphalt alone do not
+    // make a completed road appear to have a pothole.
     const roadLike = roadDamage.roadLike;
-    const definitePothole = darkRatio > 0.02 && darkRatio < 0.5 && roadLike;
+    const definitePothole = roadLike &&
+      darkRatio > 0.02 &&
+      darkRatio < 0.5 &&
+      edgeDensity > 0.025 &&
+      highContrastDensity > 0.01;
 
     // Category-specific signals (used for both completion detection and
     // campaign-mode damage/needs-attention detection).
@@ -762,8 +768,7 @@ const CivicImageAnalysis = ({ imageUrl, referenceImageUrl, projectType = 'infras
           edgeDensity * 1.8 +
           (1 - smoothness) * 0.40 +
           roadDamage.potholeSignal * 0.5 +
-          (definitePothole ? 0.35 : 0) +
-          (roadLike ? 0.08 : 0)
+          (definitePothole ? 0.35 : 0)
         );
         const potholePresence = Math.max(0.06, Math.min(0.95, 0.10 + potholePresent));
         return { confidence: potholePresence, box: { width: 0.3, height: 0.25 } };
@@ -876,19 +881,19 @@ const CivicImageAnalysis = ({ imageUrl, referenceImageUrl, projectType = 'infras
 
     if (promptLower.includes('damaged road surface') || promptLower.includes('damaged surface') || promptLower.includes('surface damage') || promptLower.includes('road distress')) {
       const confidence = Math.max(0.12, Math.min(0.95,
-        0.15 + roadDamage.damageSignal * 0.85 + (useCampaignMode && definitePothole ? 0.45 : 0) + (roadLike ? 0.05 : 0)
+        0.15 + roadDamage.damageSignal * 0.85 + (useCampaignMode && definitePothole ? 0.45 : 0)
       ));
       return { confidence, box: { width: 0.2, height: 0.16 } };
     }
     if (promptLower.includes('uneven road') || promptLower.includes('uneven pavement') || promptLower.includes('uneven surface')) {
       const confidence = Math.max(0.12, Math.min(0.95,
-        0.15 + roadDamage.damageSignal * 0.75 + (useCampaignMode && definitePothole ? 0.40 : 0) + (roadLike ? 0.05 : 0)
+        0.15 + roadDamage.damageSignal * 0.75 + (useCampaignMode && definitePothole ? 0.40 : 0)
       ));
       return { confidence, box: { width: 0.18, height: 0.14 } };
     }
     if (promptLower.includes('road safety hazard') || promptLower.includes('safety risk')) {
       const confidence = Math.max(0.12, Math.min(0.95,
-        0.15 + roadDamage.potholeSignal * 0.45 + roadDamage.damageSignal * 0.30 + (useCampaignMode && definitePothole ? 0.40 : 0) + (roadLike ? 0.05 : 0)
+        0.15 + roadDamage.potholeSignal * 0.45 + roadDamage.damageSignal * 0.30 + (useCampaignMode && definitePothole ? 0.40 : 0)
       ));
       return { confidence, box: { width: 0.2, height: 0.16 } };
     }
