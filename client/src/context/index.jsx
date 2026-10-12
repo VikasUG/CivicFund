@@ -619,6 +619,7 @@ export const StateContextProvider = ({ children }) => {
         console.log('Setting showUserTypeSelection to FALSE (returning user)');
       } else {
         console.log('No saved role found, showing role selection UI');
+        setUserType('');
         // Show role selection UI for any user without a saved role
         setShowUserTypeSelection(true);
         console.log('Setting showUserTypeSelection to TRUE (user needs role selection)');
@@ -1374,12 +1375,8 @@ export const StateContextProvider = ({ children }) => {
     setUserType('');
     setShowUserTypeSelection(false);
     
-    // Clear all user type data
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('userType_')) {
-        localStorage.removeItem(key);
-      }
-    });
+    // Keep wallet-specific roles so logging out cannot unlock a different role
+    // for the same account on the next login.
     localStorage.removeItem('userType');
   };
 
